@@ -60,9 +60,18 @@ body {
     line-height: 80px;
     font-weight: 500;
 }
-.key:hover{
-    background-color: #f7f7f7;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+.key:active{
+    transform: scale(1.1);
+    -webkit-transform: scale(1.1);
+    -moz-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    -o-transform: scale(1.1);
+    transition: .1s;
+    -webkit-transition: .1s;
+    -moz-transition: .1s;
+    -ms-transition: .1s;
+    -o-transition: .1s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
@@ -73,3 +82,10 @@ body {
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
   }
+
+  @media(hover: hover) and (pointer: fine) {
+    .key:hover {
+        background-color: #f7f7f7;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+}
