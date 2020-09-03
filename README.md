@@ -1,2 +1,2 @@
 # Calculator
-Material design calculator 
+Material design calculator made with pure JS, HTML and CSS. 
