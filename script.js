@@ -1,110 +1,125 @@
 //--------Operations----------//
-const add = (num1, num2) => result = num1 + num2
-const subtract = (num1, num2) => result = num1 - num2
-const multiply = (num1, num2) => result = num1 * num2
-const divide = (num1, num2) => result = num1 / num2
-const sqrt = (num) => result = Math.sqrt(num)
-const pow2 = (num) => result = Math.pow(num, 2)
+const add = (num1, num2) => result = Number(num1) + Number(num2)
+const subtract = (num1, num2) => result = Number(num1) - Number(num2)
+const multiply = (num1, num2) => result = Number(num1) * Number(num2)
+const divide = (num1, num2) => result = Number(num1) / Number(num2)
+const sqrt = (num) => result = Math.sqrt(Number(num))
+const pow2 = (num) => result = Math.pow(Number(num), 2)
 
-const operate = (operator, num1, num2) => operator(num1, num2)
+function operate(operator, num1, num2){
+    switch(operator){
+        case 'add':
+            return add(num1,num2)
+        case 'subtract':
+            return subtract(num1,num2)
+        case 'multiply':
+            return multiply(num1,num2)
+        case 'divide':
+            return divide(num1,num2)
+        case 'sqrt':
+            const root = calculator.waitForSecondOperand ? sqrt(num1) : sqrt(num2)
+            return root
+        case 'pow2':
+            const squared = calculator.waitForSecondOperand ? pow2(num1) : pow2(num2)
+            return squared
+        default:
+            return "ERROR"
+    }
+}
 
+const getNewCalculator = () => {
+    return {
+        firstOperand: null,
+        operator: null,
+        waitForSecondOperand: false,
+        displayValue: '0',
+        history: '0',
+    }
+}
 
-let num1
-let num2
-let operator
-let histogram = ''
-let result = ''
-
-document.querySelectorAll('.num').forEach(element => {
-    element.addEventListener('click', e => {
-        let num = e.target.innerHTML
-        histogram += `${num}`
-        if (num1 == undefined) {
-            num1 = num
-        } else if (operator == undefined) {
-            num1 += num
-        } else if (num2 == undefined) {
-            num2 = num
-        } else {
-            num2 += num
-        }
-    })
-})
-document.querySelectorAll('.functor').forEach(element => {
-    element.addEventListener('click', e => {
-        let operation = e.target.dataset.func
-
-        switch (operation) {
-            case 'solve':
-                if (num1 != undefined && num2 != undefined && operator != undefined) {
-                    operate(operator, Number(num1), Number(num2))
-                    clearData()
-                    num1 = result
-                    
-                }
-                break
-            case 'add':
-                if (operator != undefined) {
-                    operate(add, Number(num1), Number(num2))
-                    clearData()
-                    num1=result
-                }
-                operator = add
-                histogram += ` ${e.target.innerHTML} `
-                break
-            case 'subtract':
-                if (operator != undefined) {
-                    operate(subtract, Number(num1), Number(num2))
-                    clearData()
-                    num1=result
-                }
-                operator = subtract
-                histogram += ` ${e.target.innerHTML} `
-                break
-            case 'divide':
-                if (operator != undefined) {
-                    operate(divide, Number(num1), Number(num2))
-                    clearData()
-                    num1=result
-                }
-                operate = divide
-                histogram += ` ${e.target.innerHTML} `
-                break
-            case 'multiply':
-                if (operator != undefined) {
-                    operate(multiply, Number(num1), Number(num2))
-                    clearData()
-                    num1=result
-                    
-                }
-                operator = multiply
-                histogram += ` ${e.target.innerHTML} `
-                break
-            default:
-                break
-        }
-        if(histogram.length > 33){
-            histogram=result
-        }
+let calculator = {
+    firstOperand: null,
+    operator: null,
+    waitForSecondOperand: false,
+    displayValue: '0',
+    history: '0',
+}
 
 
-
-
-    })
-})
 document.querySelectorAll('.key').forEach(element => {
     element.addEventListener('click', e => {
-        updateScreen()
+        const { target } = event
+
+        if (target.classList.contains('operator')) {
+            handleOperator(target.dataset.func)
+            
+        }
+        if (target.classList.contains('digit')) {
+            handleDigits(target.innerHTML)
+        }
+
+        updateDisplay()
     })
 })
 
-function clearData() {
-    num1 = undefined
-    num2 = undefined
-    document.querySelector('.histogram').innerHTML = ''
+function handleDigits(digit) {
+    const { displayValue: result,waitForSecondOperand } = calculator
+    if (calculator.displayValue.length > 16 && !waitForSecondOperand) {
+        alert(`You can't input any number longer than 16 digits!`)
+        return
+    }
+
+    if(waitForSecondOperand === true){
+        calculator.displayValue = digit
+        calculator.waitForSecondOperand = false
+    }else{
+        calculator.displayValue = result === '0' ? digit : result + digit
+        calculator.firstOperand = calculator.displayValue
+    }
+}
+function handleOperator(operation){
+    const { firstOperand, operator, displayValue: result } = calculator
+    const input  = parseFloat(result)
+
+   
+    if(operation == 'pow2' || operation == 'sqrt'){
+
+        const result = operate(operation,firstOperand,input)
+
+        calculator.displayValue = String(result)
+        calculator.firstOperand  = result
+        return
+    }
+
+    if(operator && calculator.waitForSecondOperand){
+        calculator.operator = operation
+    }
+    if (operator){
+        const result = operate(calculator.operator,firstOperand,input)
+
+        calculator.displayValue = String(result)
+        calculator.firstOperand = result
+    }
+
+
+    calculator.waitForSecondOperand = true
+    calculator.operator = operation
+
+    console.log(JSON.stringify(calculator,null,4))
 }
 
-function updateScreen() {
-    document.querySelector('.histogram').innerHTML = histogram
-    document.querySelector('.calculations').innerHTML = result
+function updateDisplay() {
+    const dispaly = document.querySelector('.result')
+    dispaly.innerHTML = calculator.displayValue
 }
+
+
+function clearData() {
+    calculator = getNewCalculator()
+}
+
+
+document.getElementById('clear').addEventListener('click', e => {
+    clearData()
+    updateDisplay()
+})
