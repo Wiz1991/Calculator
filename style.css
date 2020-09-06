@@ -40,6 +40,7 @@ body {
     border-bottom: 2px solid rgb(219, 219, 219);
     height: 40px; 
     width: 100%;
+    overflow-x: hidden;
 }
 .result{
     font-size: 26px;
@@ -73,10 +74,13 @@ body {
     -o-transition: .1s;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
 }
+.equal{
+    grid-column-end: span 2;
+}
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
          -moz-user-select: none; /* Old versions of Firefox */
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
