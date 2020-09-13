@@ -7,4 +7,4 @@ A simple JavaScript calculator, with a simplistic design, that handles all your 
  - JavaScript  
   
   
-Visit [here](https://Wiz1991.github.io/Calculator/) to try this out.
+Visit [here](https://Wiz1991.github.io/Calculator/) for a live demo.
